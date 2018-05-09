@@ -52,12 +52,14 @@ public class Map implements MapInterface {
     int[] blockStepY = {Y_STEP_ONE, Y_STEP_TWO, Y_STEP_ONE, -Y_STEP_ONE, -Y_STEP_TWO, -Y_STEP_ONE};
     int blockSpecialValue = 0;
     int cellSpecial = 0;
+    int count = 0;
 
-    mapCells[origin.x/10][origin.y/10] = new EschatonCell(new CellPosition(0, 0, 0),
+    Cell tempCell = new EschatonCell(new CellPosition(0, 0, 0),
         new Point(origin.x, origin.y), blockSpecialValue);
 
-    cellGrid[0][0][0] = new EschatonCell(new CellPosition(0, 0, 0),
-        new Point(origin.x, origin.y), blockSpecialValue);
+    mapCells[origin.x/10][origin.y/10] = tempCell;
+
+    cellGrid[0][0][0] = tempCell;
 
     for (int distanceFromOrigin = 0; distanceFromOrigin < config.getSizeOfMap();
          distanceFromOrigin++){
@@ -89,10 +91,16 @@ public class Map implements MapInterface {
           }else {
             cellSpecial = 0;
           }
-          cellGrid [distanceFromOrigin][block+1][blockSize+1] = makeNewCell(
+
+          tempCell = makeNewCell(
               new CellPosition(distanceFromOrigin,block+1, blockSize+1),
               new Point(blockXOrdinal + blockStepX[block] * (blockSize + 1),
                   blockYOrdinal + blockStepY[block] * (blockSize + 1)), cellSpecial);
+
+          cellGrid [distanceFromOrigin][block+1][blockSize+1] = tempCell;
+          mapCells[(blockXOrdinal + blockStepX[block] * (blockSize + 1))/10]
+              [(blockYOrdinal + blockStepY[block] * (blockSize + 1))/10] = tempCell;
+          System.out.println(count++);
         }
       }
     }
